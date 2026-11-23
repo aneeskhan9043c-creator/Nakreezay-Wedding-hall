@@ -1,0 +1,727 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --maroon-deep: #4A0E0E;
+    --maroon-dark: #2B0606;
+    --maroon-velvet: #3B0808;
+    --gold-antique: #C9A227;
+    --gold-eyebrow: #B08D2E;
+    --ivory-cream: #F5EFE0;
+    --ivory-soft: #FAF6EC;
+    --ink-brown: #3B2A26;
+    --caption-brown: #6B5B52;
+    --font-display: "Cinzel", Georgia, serif;
+    --font-serif-body: "Cormorant Garamond", Georgia, serif;
+    --font-script: "Pinyon Script", cursive, Georgia, serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--ivory-cream);
+    color: var(--ink-brown);
+    font-family: var(--font-serif-body);
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--ivory-cream);
+    color: var(--ink-brown);
+    font-family: var(--font-serif-body);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+}
+
+/* Strictly Pinyon Script ONLY for the venue name (Nakreezay Banquet) */
+.font-script {
+  font-family: var(--font-script);
+  font-weight: 400;
+}
+
+/* Cinzel for ALL headings, eyebrows, buttons, filter pills, and numbers */
+.font-heading {
+  font-family: var(--font-display);
+}
+
+/* Cormorant Garamond for ALL body text, captions, and FAQ answers */
+.font-editorial {
+  font-family: var(--font-serif-body);
+}
+
+/* Scrollbar hiding for single-row swipeable gallery filters */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Velvet maroon texture without black backgrounds */
+.bg-maroon-velvet {
+  background-color: #4A0E0E;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(201, 162, 39, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(120, 24, 24, 0.35) 0%, transparent 50%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 18px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(43, 6, 6, 0.14) 0px,
+      rgba(43, 6, 6, 0.14) 1px,
+      transparent 1px,
+      transparent 18px
+    );
+}
+
+/* Warm ivory editorial parchment base */
+.bg-ivory-parchment {
+  background-color: #F5EFE0;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.6) 0%, transparent 65%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(74, 14, 14, 0.014) 0px,
+      rgba(74, 14, 14, 0.014) 1px,
+      transparent 1px,
+      transparent 28px
+    );
+}
+
+/* Envelope entrance & realistic wax-seal opening sequence (~1.8s total) */
+@keyframes envelopeScaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translate3d(0, 14px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.envelope-enter {
+  animation: envelopeScaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.envelope-stage {
+  perspective: 1400px;
+}
+
+.envelope-flap {
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.envelope-flap.is-open {
+  transform: rotateX(174deg);
+}
+
+.envelope-flap-shadow {
+  transform-origin: top center;
+  transition: opacity 0.48s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.envelope-flap-shadow.is-open {
+  opacity: 0;
+  transform: scaleY(0.35);
+}
+
+/* Warm golden light spilling from inside the open envelope */
+.envelope-inner-glow {
+  opacity: 0;
+  transform: scale(0.75) translate3d(0, 12px, 0);
+  transition: opacity 0.65s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.envelope-inner-glow.is-lit {
+  opacity: 1;
+  transform: scale(1.12) translate3d(0, -18px, 0);
+}
+
+/* Ivory invitation card sliding out smoothly toward the viewer */
+.envelope-letter {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0) scale(0.95);
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+  will-change: transform, opacity;
+}
+
+.envelope-letter.is-open {
+  opacity: 1;
+  transform: translate3d(0, -72px, 0) scale(1.07);
+}
+
+/* Subtle breathing glow around seal before user taps */
+@keyframes waxSealIdlePulse {
+  0%, 100% {
+    opacity: 0.42;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.1);
+  }
+}
+
+.wax-seal-halo {
+  animation: waxSealIdlePulse 2.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes waxCrackShake {
+  0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  25% { transform: translate(-50%, -50%) scale(1.06) rotate(-4deg); }
+  55% { transform: translate(-50%, -50%) scale(1.1) rotate(4deg); }
+  100% { transform: translate(-50%, -50%) scale(1.12) rotate(0deg); }
+}
+
+@keyframes waxCrackSplitLeft {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); opacity: 1; }
+  35% { transform: translate3d(-4px, -2px, 0) rotate(-6deg) scale(1.04); opacity: 1; }
+  100% { transform: translate3d(-26px, 16px, 0) rotate(-22deg) scale(0.88); opacity: 0; }
+}
+
+@keyframes waxCrackSplitRight {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); opacity: 1; }
+  35% { transform: translate3d(4px, -2px, 0) rotate(6deg) scale(1.04); opacity: 1; }
+  100% { transform: translate3d(26px, 18px, 0) rotate(22deg) scale(0.88); opacity: 0; }
+}
+
+@keyframes sealCrackFlare {
+  0% { opacity: 0; transform: scale(0.4); }
+  30% { opacity: 0.95; transform: scale(1.15); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+
+.wax-seal-btn {
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+  will-change: transform, opacity;
+}
+
+.wax-seal-btn:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+  filter: drop-shadow(0 12px 24px rgba(26, 2, 2, 0.65));
+}
+
+.wax-seal-btn:active {
+  transform: translate(-50%, -50%) scale(0.97);
+}
+
+.wax-seal-btn.is-cracking {
+  animation: waxCrackShake 0.28s ease-out forwards;
+}
+
+.wax-half-left {
+  clip-path: polygon(0 0, 53% 0, 46% 52%, 55% 100%, 0 100%);
+  animation: waxCrackSplitLeft 0.56s cubic-bezier(0.16, 1, 0.3, 1) 0.14s forwards;
+  will-change: transform, opacity;
+}
+
+.wax-half-right {
+  clip-path: polygon(53% 0, 100% 0, 100% 100%, 55% 100%, 46% 52%);
+  animation: waxCrackSplitRight 0.56s cubic-bezier(0.16, 1, 0.3, 1) 0.14s forwards;
+  will-change: transform, opacity;
+}
+
+.wax-crack-flare {
+  animation: sealCrackFlare 0.68s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Gold particles floating upward from the opened royal envelope */
+@keyframes goldFloatUp {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.4);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(var(--tx, 16px), var(--ty, -120px), 0) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.gold-spark {
+  animation: goldFloatUp var(--dur, 1.15s) cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms) forwards;
+  will-change: transform, opacity;
+}
+
+/* Hero slow Ken Burns zoom (20s loop) */
+@keyframes kenBurnsSlow {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.07) translate3d(-1%, -0.7%, 0);
+  }
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.hero-ken-burns {
+  animation: kenBurnsSlow 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Staggered Hero element & word-by-word entrance */
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.hero-stagger {
+  opacity: 0;
+  animation: heroFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--stagger-delay, 0ms) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes heroWordIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.hero-word {
+  display: inline-block;
+  opacity: 0;
+  animation: heroWordIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) var(--word-delay, 0ms) forwards;
+  will-change: transform, opacity;
+}
+
+/* Slow gold shimmer sweep across Hero venue name every 5s */
+@keyframes heroTitleGoldSweep {
+  0%, 62% {
+    background-position: 130% 0;
+  }
+  88%, 100% {
+    background-position: -90% 0;
+  }
+}
+
+.hero-title-shimmer {
+  color: #C9A227;
+  background-image: linear-gradient(
+    112deg,
+    #C9A227 0%,
+    #C9A227 38%,
+    #FFF2B8 50%,
+    #C9A227 62%,
+    #C9A227 100%
+  );
+  background-size: 250% 100%;
+  background-position: 130% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heroTitleGoldSweep 5s ease-in-out infinite;
+}
+
+/* Infinite gold marquee ribbon between Hero & Halls */
+@keyframes ribbonScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.gold-ribbon-track {
+  display: flex;
+  width: max-content;
+  animation: ribbonScroll 32s linear infinite;
+  will-change: transform;
+}
+
+.gold-ribbon-strip:hover .gold-ribbon-track {
+  animation-play-state: paused;
+}
+
+/* Soft gold glow on animated stats/numerals */
+.stat-gold-glow {
+  text-shadow: 0 0 12px rgba(201, 162, 39, 0.48), 0 0 24px rgba(201, 162, 39, 0.2);
+}
+
+/* Slow scroll-triggered zoom reveal on photo wrappers (composited transform only) */
+.img-zoom-reveal {
+  transform: scale(1.07);
+  transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+[data-visible='true'] .img-zoom-reveal {
+  transform: scale(1);
+}
+
+/* Floating rose petals in Hero */
+@keyframes petalFloat {
+  0% {
+    transform: translate3d(0, -10%, 0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.78;
+  }
+  85% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate3d(28px, 115%, 0) rotate(160deg);
+    opacity: 0;
+  }
+}
+
+.rose-petal {
+  animation: petalFloat var(--petal-duration, 12s) linear var(--petal-delay, 0s) infinite;
+  will-change: transform, opacity;
+}
+
+/* Lightbox fade + zoom opening */
+@keyframes lightboxScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.lightbox-panel {
+  animation: lightboxScaleIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Gallery filter transition (fade + scale 300ms) */
+@keyframes galleryTileIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.gallery-tile-enter {
+  animation: galleryTileIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+/* Hover lift 6px + soft shadow + gold glow + mobile tap press */
+.gold-hover-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  will-change: transform;
+}
+
+.gold-hover-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(74, 14, 14, 0.14), 0 0 0 1px rgba(201, 162, 39, 0.65);
+}
+
+.gold-hover-card:active {
+  transform: scale(0.98);
+}
+
+/* Primary & Secondary Button motion + gold shimmer sweep on primary CTA */
+.gold-hover-btn {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  will-change: transform;
+}
+
+.gold-hover-btn:hover {
+  transform: scale(1.02) translateY(-1px);
+  box-shadow: 0 8px 24px rgba(201, 162, 39, 0.42);
+}
+
+.gold-hover-btn:active {
+  transform: scale(0.97);
+}
+
+@keyframes goldShimmerSweep {
+  0%, 58% {
+    transform: translateX(-140%) skewX(-20deg);
+    opacity: 0;
+  }
+  65% {
+    opacity: 0.72;
+  }
+  85% {
+    transform: translateX(240%) skewX(-20deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(240%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+.btn-primary-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(255, 250, 224, 0.55), transparent);
+  transform: translateX(-140%) skewX(-20deg);
+  animation: goldShimmerSweep 4.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Scroll reveal (fade in + slide up 24px, staggered via inline transitionDelay) */
+.scroll-reveal {
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.scroll-reveal[data-visible='false'] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+}
+
+.scroll-reveal[data-visible='true'] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Section dividers drawing out from center */
+.divider-draw {
+  transform-origin: center;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
+  will-change: transform, opacity;
+}
+
+.divider-draw[data-visible='false'] {
+  opacity: 0;
+  transform: scaleX(0.15);
+}
+
+.divider-draw[data-visible='true'] {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Gentle bob + soft pulse on floating mobile WhatsApp button */
+@keyframes whatsappBob {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -4px, 0) scale(1.02);
+  }
+}
+
+.whatsapp-float-bob {
+  animation: whatsappBob 3s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Smooth GPU checkmark bounce on form submission */
+@keyframes checkPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  65% { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.check-pop {
+  animation: checkPop 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Footer bold craftsman signature — 1px stroke + layered gold shadow + 4s shimmer + glow pulse + reactive hover/tap burst */
+@keyframes aneesGoldShimmer {
+  0%, 54% {
+    background-position: 125% 0;
+  }
+  86%, 100% {
+    background-position: -85% 0;
+  }
+}
+
+@keyframes aneesGlowPulse {
+  0%, 100% {
+    opacity: 0.72;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes aneesMiniBurst {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--bx, 22px), var(--by, -22px), 0) scale(1.15);
+    opacity: 0;
+  }
+}
+
+.anees-signature-wrap {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.3em;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), filter 0.28s ease;
+  will-change: transform, filter;
+}
+
+.anees-signature-base {
+  display: inline-block;
+  color: #C9A227;
+  -webkit-text-stroke: 1px #C9A227;
+  text-shadow:
+    0 0 1px #C9A227,
+    0 1px 2px rgba(201, 162, 39, 0.65),
+    0 0 14px rgba(201, 162, 39, 0.36);
+  transition: color 0.28s ease, text-shadow 0.28s ease;
+}
+
+.anees-signature-sheen {
+  position: absolute;
+  inset: 0;
+  display: inline-block;
+  padding: 0 0.3em;
+  -webkit-text-stroke: 1px transparent;
+  background-image: linear-gradient(
+    110deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(255, 245, 198, 0.92) 50%,
+    transparent 62%,
+    transparent 100%
+  );
+  background-size: 260% 100%;
+  background-position: 125% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: aneesGoldShimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.anees-signature-glow {
+  animation: aneesGlowPulse 3.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.group:hover .anees-signature-wrap,
+.group:focus-visible .anees-signature-wrap,
+.group:active .anees-signature-wrap {
+  transform: translate3d(0, -4px, 0) scale(1.04);
+  filter: brightness(1.24);
+}
+
+.group:hover .anees-signature-base,
+.group:focus-visible .anees-signature-base,
+.group:active .anees-signature-base {
+  color: #E8C758;
+  -webkit-text-stroke: 1px #E8C758;
+  text-shadow:
+    0 0 2px #F4DE8D,
+    0 2px 6px rgba(232, 199, 88, 0.78),
+    0 0 22px rgba(244, 222, 141, 0.58);
+}
+
+.anees-burst-spark {
+  animation: aneesMiniBurst 0.68s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .envelope-enter,
+  .envelope-flap,
+  .envelope-flap-shadow,
+  .envelope-inner-glow,
+  .envelope-letter,
+  .wax-seal-btn,
+  .wax-seal-halo,
+  .wax-half-left,
+  .wax-half-right,
+  .wax-crack-flare,
+  .gold-spark,
+  .hero-ken-burns,
+  .hero-stagger,
+  .hero-word,
+  .hero-title-shimmer,
+  .gold-ribbon-track,
+  .img-zoom-reveal,
+  .rose-petal,
+  .lightbox-panel,
+  .gallery-tile-enter,
+  .gold-hover-card,
+  .gold-hover-btn,
+  .btn-primary-shimmer::after,
+  .scroll-reveal,
+  .divider-draw,
+  .whatsapp-float-bob,
+  .check-pop,
+  .anees-signature-wrap,
+  .anees-signature-sheen,
+  .anees-signature-glow,
+  .anees-burst-spark {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .envelope-intro-fade {
+    transition: opacity 0.32s ease !important;
+  }
+  .envelope-letter {
+    opacity: 0 !important;
+  }
+  .hero-title-shimmer {
+    background-image: none !important;
+    -webkit-text-fill-color: #C9A227 !important;
+    color: #C9A227 !important;
+  }
+  .anees-signature-sheen,
+  .anees-burst-spark {
+    display: none !important;
+  }
+  .wax-seal-btn {
+    transform: translate(-50%, -50%) !important;
+  }
+}
